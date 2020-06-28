@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_poo/models/publication.dart';
 import 'package:proyecto_poo/models/user.dart';
+import 'package:proyecto_poo/pages/card_page.dart';
 
 class PublicationList extends StatefulWidget {
   PublicationList({Key key}) : super(key: key);
@@ -22,13 +23,17 @@ class _PublicationListState extends State<PublicationList> {
       }
       );
   }
-
   Widget createCardPost(Publication publication, BuildContext context){
     return Padding(
       padding:EdgeInsets.only(top: 0),
       child: Card(
         child: ListTile(
-          onTap: (){},
+          onTap: (){
+            Navigator.push(
+               context,
+              MaterialPageRoute(builder: (context) => CardPage(publication),
+            ));
+          },
           title: Text(publication.userName),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

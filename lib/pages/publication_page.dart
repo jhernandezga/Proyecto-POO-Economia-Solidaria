@@ -156,6 +156,7 @@ class _PublicationPageState extends State<PublicationPage> {
                 subTitle: this._subTitleField,
                 content: this._contentField,
               ));
+              Navigator.pop(context);
             } else {
               String url = await uploadStatusImage();
               user.publish(Publication(

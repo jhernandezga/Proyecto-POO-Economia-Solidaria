@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:proyecto_poo/models/publication.dart';
+import 'package:proyecto_poo/models/user.dart';
 
 
 class DatabaseService{
@@ -72,6 +73,46 @@ class DatabaseService{
 
   Stream<List<Publication>> get publications{
     return  this.publicationCollection.snapshots().map(_publicationFromSnapshot);
+  }
+
+
+  createChatRoom(String chatRoomId,  chatRoomMap){
+
+    Firestore.instance.collection("chatRooms")
+    .document(chatRoomId).setData(chatRoomMap).catchError((e){
+      print(e.toString());
+    });
+
+  }
+
+  addConversationMessages( String chatRoomId, messageMap){
+    Firestore.instance.collection("chatRooms")
+    .document(chatRoomId)
+    .collection("chats")
+    .add(messageMap).catchError((e){print(e.toString());});
+  }
+
+  getConversationMessage(String chatRoomId) async {
+
+    return await Firestore.instance.collection("chatRooms")
+      .document(chatRoomId)
+      .collection("chats")
+      .orderBy("time").snapshots();
+  }
+
+  Future<User> getUserByUserName(String userName) async {
+    QuerySnapshot dataUser = await userCollection.where('name', isEqualTo: userName)
+                  .getDocuments();
+
+    return User(
+      name: dataUser.documents[0].data['name'],
+      uid: dataUser.documents[0].documentID,
+      email:  dataUser.documents[0].data['email'],
+      phoneNumber:  dataUser.documents[0].data['phoneNumber'],
+      photoUrl:  dataUser.documents[0].data['photoUrl'],
+      
+    );
+    
   }
 
 }

@@ -3,7 +3,7 @@
 
 class Publication{
 
-
+  String id;
   String title;
   String subTitle;
   String content;

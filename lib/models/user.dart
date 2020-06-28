@@ -29,4 +29,12 @@ class User {
     return true;
   }
 
+  void sendMessage(String message, String chatRoomId){
+    Map<String,String> messageMap = {
+      'message': message,
+      'sendBy': this.name,
+    };
+    DatabaseService().addConversationMessages(chatRoomId, messageMap);
+  }
+
 }
