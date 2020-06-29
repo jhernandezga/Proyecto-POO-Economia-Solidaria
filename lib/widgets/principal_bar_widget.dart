@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_poo/models/user.dart';
+import 'package:proyecto_poo/pages/chatRoom_page.dart';
 import 'package:proyecto_poo/providers/login_state_provider.dart';
 
 class PrincipalBar extends StatelessWidget {
@@ -29,9 +31,8 @@ class PrincipalBar extends StatelessWidget {
           )
       ]
       );*/
-    
-    
-    
+    User user = context.watch<User>();
+      
     return BottomAppBar(
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -39,7 +40,12 @@ class PrincipalBar extends StatelessWidget {
         children: <Widget>[
           _actionButton(Icons.access_time,(){}),
           _actionButton(Icons.assistant,(){}),
-          _actionButton(Icons.accessibility,(){}),
+          _actionButton(Icons.accessibility,(){
+            Navigator.push(
+             context,
+              MaterialPageRoute(builder: (context) => ChatRoomPage(user.name))
+            );
+          }),
          
         
         ],

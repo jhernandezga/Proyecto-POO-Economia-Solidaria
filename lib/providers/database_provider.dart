@@ -72,7 +72,8 @@ class DatabaseService{
   }
 
   Stream<List<Publication>> get publications{
-    return  this.publicationCollection.snapshots().map(_publicationFromSnapshot);
+    return  this.publicationCollection.orderBy('date',descending: true)
+    .snapshots().map(_publicationFromSnapshot);
   }
 
 
@@ -92,12 +93,13 @@ class DatabaseService{
     .add(messageMap).catchError((e){print(e.toString());});
   }
 
-  getConversationMessage(String chatRoomId) async {
+  Stream<QuerySnapshot> getConversationMessage(String chatRoomId) {
 
-    return await Firestore.instance.collection("chatRooms")
+    return Firestore.instance.collection("chatRooms")
       .document(chatRoomId)
       .collection("chats")
-      .orderBy("time").snapshots();
+      .orderBy('date', descending: true)
+     .snapshots();
   }
 
   Future<User> getUserByUserName(String userName) async {
@@ -115,4 +117,12 @@ class DatabaseService{
     
   }
 
+  Stream<QuerySnapshot> getChatRoom(String userName){
+    return Firestore.instance.collection("chatRooms")
+    .where('users', arrayContains: userName)
+    .snapshots();
+  }
+
+
+  
 }

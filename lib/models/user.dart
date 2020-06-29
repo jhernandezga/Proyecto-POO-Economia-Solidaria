@@ -30,9 +30,11 @@ class User {
   }
 
   void sendMessage(String message, String chatRoomId){
+    DateTime date = DateTime.now();
     Map<String,String> messageMap = {
       'message': message,
       'sendBy': this.name,
+      'date': date.toString()
     };
     DatabaseService().addConversationMessages(chatRoomId, messageMap);
   }

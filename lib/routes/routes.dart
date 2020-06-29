@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_poo/pages/chatRoom_page.dart';
 import 'package:proyecto_poo/pages/chat_page.dart';
 import 'package:proyecto_poo/pages/home_page.dart';
 import 'package:proyecto_poo/pages/login_page.dart';
@@ -18,6 +19,6 @@ Map<String, WidgetBuilder> getApplicationRoutes(BuildContext context)
         'register':(BuildContext context )  => RegisterPage(),
         'product':(BuildContext context )  => PublicationPage(),
         'home':(BuildContext context )  => HomePage(),
-        'chat': (BuildContext context )  => ChatPage(),
+
         };
 }

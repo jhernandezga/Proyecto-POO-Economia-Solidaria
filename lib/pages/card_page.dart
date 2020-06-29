@@ -5,6 +5,8 @@ import 'package:proyecto_poo/models/chat.dart';
 import 'package:proyecto_poo/models/publication.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_poo/models/user.dart';
+import 'package:proyecto_poo/pages/chatRoom_page.dart';
+import 'package:proyecto_poo/pages/chat_page.dart';
 
 
 class CardPage extends StatefulWidget {
@@ -151,11 +153,23 @@ Widget interactionWidgets(User user, String userName){
                           actions: <Widget>[
                             FlatButton(
                               onPressed: (){
+                              
                                 
                                 Chat chat = new Chat(user.name, this._publication.userName);
                                 chat.createChatRoomAndStartConversation();
+                                
                                 user.sendMessage(this._message, chat.chatRoomId);
-                                Navigator.popAndPushNamed(context, 'chat',arguments: this._publication.userName);
+                                user.sendMessage('Ví tu publicación', chat.chatRoomId);
+                                if(this._selection!=null){
+                                   user.sendMessage('te ayudaré con ${this._options[this._selection]}', chat.chatRoomId);
+                                }
+                                user.sendMessage('estos son mis datos de contacto', chat.chatRoomId);
+                                user.sendMessage('${user.email}', chat.chatRoomId);
+                                
+                                Navigator.pushReplacement(
+                                   context,
+                                   MaterialPageRoute(builder: (context) => ChatPage(chat.chatRoomId))
+                                         );
                               },
                                child: Text("Ok")
                                ),
