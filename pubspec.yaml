@@ -30,6 +30,8 @@ dependencies:
   firebase_storage:
   intl:
   image_picker: ^0.6.7+2
+  flutter_swiper :
+  
 
 
 

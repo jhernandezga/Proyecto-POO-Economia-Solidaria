@@ -4,6 +4,7 @@ import 'package:proyecto_poo/models/publication.dart';
 import 'package:proyecto_poo/models/user.dart';
 import 'package:proyecto_poo/pages/card_page.dart';
 
+
 class PublicationList extends StatefulWidget {
   PublicationList({Key key}) : super(key: key);
 
@@ -34,12 +35,17 @@ class _PublicationListState extends State<PublicationList> {
               MaterialPageRoute(builder: (context) => CardPage(publication),
             ));
           },
-          title: Text(publication.userName),
+          title: Row(
+            children: <Widget>[
+              IconButton(icon: Icon(Icons.account_circle),onPressed: (){},),
+              Text(publication.userName),
+            ],
+          ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(publication.title, style: TextStyle(color: Colors.blue[800],fontSize: 15,fontWeight: FontWeight.bold,)),
-              buildImage(publication.imageUrl),
+              buildImage(publication),
               Text(publication.subTitle,style: TextStyle(color: Colors.blueGrey[700], fontStyle: FontStyle.italic),),
               Text(publication.date.substring(0,19)),
               
@@ -47,27 +53,39 @@ class _PublicationListState extends State<PublicationList> {
           ),
 
 
-          leading: Icon(Icons.account_circle,size: 30,),
-          trailing: Icon(Icons.arrow_forward_ios),
+          //leading: Icon(Icons.account_circle,size: 30,),
+          //trailing: Icon(Icons.arrow_forward_ios),
         ),
       ),
       );
   }
 
-  Widget buildImage(String url){
+  Widget buildImage(Publication publication){
+    String url = publication.imageUrl;
+    ImageProvider image;
+    
     if(url == "" || url == null){
       return Container();
     }else{
       return Container(
 
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: FadeInImage(
-                placeholder: AssetImage('assets/jar-loading.gif'),
-                image: NetworkImage(url,scale: 0.5),
-                height: 200,
+        child: Hero(
+          tag: publication.id,
+            child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: FadeInImage(
+                  fit: BoxFit.cover ,
+                  fadeInCurve: Curves.easeInCirc,
+                  fadeOutCurve: Curves.decelerate,
+                  fadeInDuration: Duration(milliseconds: 100),
+                  width: MediaQuery.of(context).size.height,
+                  height: MediaQuery.of(context).size.height*0.25,
+                  placeholder: AssetImage('assets/jar-loading.gif'),
+                  image: NetworkImage(url,scale: 0.5),
+                  
                 
-                 ),
+                   )  ,
+          ),
         )
 
       ) ;

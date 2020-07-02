@@ -142,6 +142,9 @@ class _PublicationPageState extends State<PublicationPage> {
   Widget _buttonSubmmit(BuildContext context) {
     User user = context.watch<User>();
     return RaisedButton(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20)
+      ),
         child: Text(
           'Publicar',
           style: TextStyle(color: Colors.white, fontSize: 18),
@@ -152,6 +155,7 @@ class _PublicationPageState extends State<PublicationPage> {
             formKey.currentState.save();
             if (this._image == null) {
               user.publish(Publication(
+
                 title: this._titleField,
                 subTitle: this._subTitleField,
                 content: this._contentField,
@@ -174,7 +178,9 @@ class _PublicationPageState extends State<PublicationPage> {
   Future<File> _getImage( ImageSource source) async {
     try {
       var tempImage = await picker.getImage(source: source,
-      preferredCameraDevice: CameraDevice.rear);
+      preferredCameraDevice: CameraDevice.rear,
+      imageQuality: 40
+      );
       setState(() {
         _image = File(tempImage.path);
         return _image;
@@ -189,8 +195,7 @@ class _PublicationPageState extends State<PublicationPage> {
       return Container();
     } else {
       return Container(
-          height: 300,
-          width: 250,
+         
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             color: Colors.blue,
@@ -198,7 +203,11 @@ class _PublicationPageState extends State<PublicationPage> {
           child: ClipRRect(
               borderRadius: BorderRadius.circular(30),
               child: Card(
-                child: Image.file(this._image),
+                child: Image.file(this._image,
+                fit: BoxFit.cover,
+                height: MediaQuery.of(context).size.height*0.25,
+                width: MediaQuery.of(context).size.width*0.7,
+                ),
               )));
     }
   }
@@ -212,4 +221,7 @@ class _PublicationPageState extends State<PublicationPage> {
     var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
     return imageUrl.toString();
   }
-}
+
+  }
+  
+

@@ -133,14 +133,18 @@ class _ChatPageState extends State<ChatPage> {
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: 24,vertical: 10),
        
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
+        child: SingleChildScrollView(
+        
+                  child: Row(
+            mainAxisSize: MainAxisSize.min,
+            
 
-          children: <Widget>[
-            Text(message, style: TextStyle(color: Colors.white),),
-            SizedBox(width:10),
-            Text(date.substring(11,16), style: TextStyle(fontSize: 11,color: Colors.grey[300]),textAlign: TextAlign.right)
-          ],
+            children: <Widget>[
+              Text(message, style: TextStyle(color: Colors.white),overflow: TextOverflow.ellipsis,),
+              SizedBox(width:10),
+              Text(date.substring(11,16), style: TextStyle(fontSize: 11,color: Colors.grey[300]),textAlign: TextAlign.right,overflow: TextOverflow.ellipsis,)
+            ],
+          ),
         ),
         decoration: BoxDecoration(
           color: isSendByMe?Colors.blue:Colors.grey[500],

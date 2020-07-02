@@ -9,6 +9,7 @@ import 'package:proyecto_poo/pages/chatRoom_page.dart';
 import 'package:proyecto_poo/pages/chat_page.dart';
 
 
+
 class CardPage extends StatefulWidget {
   final Publication publication;
   CardPage( this.publication);
@@ -22,6 +23,7 @@ class _CardPageState extends State<CardPage> {
   List<String> _options = ["Donación","Trueque","Otro"];
   int _selection ;
   String _message;
+  User user;
   final formKey = GlobalKey<FormState>();
   _CardPageState(this._publication);
 
@@ -29,62 +31,40 @@ class _CardPageState extends State<CardPage> {
   
   @override
   Widget build(BuildContext context) {
-    User user = Provider.of<User>(context);
+    user = Provider.of<User>(context);
     return  Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
         title: Text("Publicacion de ${this._publication.userName}"),
-      ),
-      body:SingleChildScrollView(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(0),
-            child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(colors: <Color>[
-                        Color.fromRGBO(208, 208, 255, 0.2),
-                        Color.fromRGBO(255, 255, 255, 0.2)
-                          ])
+      ),*/
+      body:SafeArea(
+        bottom: true,
+        maintainBottomViewPadding: true,
+
+        
+          child: CustomScrollView(
+          
+          scrollDirection: Axis.vertical,
+
+          slivers: <Widget>[
+            _crearAppBar(),
+            SliverList(
+              delegate: SliverChildListDelegate(
+                [
+                  SizedBox(height: 10,),
+                  _image(),
+                  _description(context),
+                  interactionWidgets(user, this._publication.userName)
+                ]
 
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Text(this._publication.title, style: TextStyle(color: Colors.blue[800],fontSize: 30)),
-                  SizedBox(height:10),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(200),
-                    child: FadeInImage(
-                      fadeInCurve: Curves.easeInSine,
-                      width: 500,
-                      height: 400,
-                      fit: BoxFit.contain,
-                      placeholder: AssetImage('assets/jar-loading.gif'), 
-                      image: NetworkImage(this._publication.imageUrl)
-                      ),
-                  ),
-                  Text(this._publication.subTitle, style: TextStyle(color: Colors.blueGrey[800], fontStyle: FontStyle.italic,)),
-                  SizedBox(height:20),
-                  Container( 
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      
-                    ),
-                    child:Text(this._publication.content, style: TextStyle(fontSize: 20, color: Colors.black54),)),
-                  interactionWidgets(user, this._publication.userName),
-                  SizedBox(height: 40),
-                  
-                  
-                  
-                ],
-              ),
             ),
-          ),
+          ],
         ),
-      ),
+      )
     );
   }
+
+  
   Widget radioList(){
     List<Widget> buttons = List();
     buttons.add(
@@ -140,6 +120,9 @@ Widget interactionWidgets(User user, String userName){
                   formMessage(),
                   SizedBox(height:30),
                   RaisedButton(
+                    shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)
+                        ),
                     child: Text("Ofrecer Ayuda", style:TextStyle(color:Colors.white)),
                     color: Colors.blue[300],
                     onPressed: (){
@@ -183,7 +166,8 @@ Widget interactionWidgets(User user, String userName){
                       ),
                         );
                     }
-                    )
+                    ),
+                    SizedBox(height: 50)
       ],
 
     );
@@ -193,6 +177,95 @@ Widget interactionWidgets(User user, String userName){
   }
 
 }
+
+Widget _description(BuildContext context){
+  return Column(
+    children: <Widget>[
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+        child: Text(this._publication.subTitle,
+        overflow: TextOverflow.fade,
+        style: Theme.of(context).textTheme.subtitle2,
+    
+        ),
+      ),
+      Container(
+        child: Text(this._publication.date.substring(0,19),
+        style: TextStyle(
+         fontStyle: FontStyle.italic 
+        ),
+
+        ),
+      ),
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+        child: Text(
+          this._publication.content,
+          textAlign: TextAlign.justify,
+          style: TextStyle(
+            fontSize: 15,
+          ),
+        ),
+      ),
+    ],
+  );
+
+}
+
+Widget _image(){
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+    width: MediaQuery.of(context).size.width*0.7,
+    height: MediaQuery.of(context).size.height*0.4,
+    
+    child: Hero(
+        tag: this._publication.id,
+        child: ClipRRect(
+
+        borderRadius: BorderRadius.circular(100),
+        child: FadeInImage(
+          width: MediaQuery.of(context).size.width*0.7,
+          height: MediaQuery.of(context).size.height*0.4,
+          
+          fadeInCurve: Curves.easeInSine,
+          fit: BoxFit.cover,
+          placeholder: AssetImage('assets/jar-loading.gif'), 
+          image:NetworkImage(this._publication.imageUrl)
+           ),
+      ),
+    ),
+  );
+}
+
+ Widget _crearAppBar() {
+   return SliverAppBar(
+     
+     elevation: 2.0,
+     backgroundColor: Colors.indigoAccent,
+     expandedHeight: 200,
+     floating: false,
+     pinned: false,
+     title: Text('Publicación de ${this._publication.userName}'),
+     flexibleSpace: FlexibleSpaceBar(
+       centerTitle: true,
+       title: SingleChildScrollView(
+                child: Column(
+           mainAxisAlignment: MainAxisAlignment.end,
+           mainAxisSize: MainAxisSize.min,
+           children: <Widget>[
+             IconButton(icon: Icon(Icons.account_circle, size: 50,color: Colors.white,), onPressed: (){}),
+             SizedBox(height: 10,),
+             Text('${this._publication.title}',
+                  style: TextStyle(color: Colors.white ),
+                  overflow: TextOverflow.clip,
+                ),
+           ],
+         ),
+       ),
+     ),
+
+   );
+ }
 }
 
 

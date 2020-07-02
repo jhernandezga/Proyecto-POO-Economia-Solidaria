@@ -5,6 +5,7 @@ import 'package:proyecto_poo/models/user.dart';
 import 'package:proyecto_poo/pages/chat_page.dart';
 import 'package:proyecto_poo/providers/database_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_poo/widgets/principal_bar_widget.dart';
 
 class ChatRoomPage extends StatefulWidget {
   final String name;
@@ -35,12 +36,9 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   Widget build(BuildContext context) {
     _userName = Provider.of<User>(context).name;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Chats'),
-      ),
-      body: chatRoomList(),
-    );
+    return  chatRoomList();
+    
+    
   }
 
   Widget chatRoomList(){

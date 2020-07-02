@@ -19,6 +19,7 @@ class User {
     DatabaseService db =  new DatabaseService(uid: this.uid);
     db.updateUser(numberPost: numberPost);
     db.postPublication(
+    id: '${this.uid}${publication.date}',
     userName: publication.userName,
     title: publication.title,
     subTitle: publication.subTitle, 

@@ -9,6 +9,7 @@ class DatabaseService{
   final String uid;
   
   DatabaseService({this.uid});
+  bool chargin = false;
 
   final CollectionReference userCollection = Firestore.instance.collection('users');
   final CollectionReference publicationCollection = Firestore.instance.collection('publications');
@@ -40,10 +41,11 @@ class DatabaseService{
 
   
 
-  Future postPublication({String title, String subTitle, String content='', String imageUrl='', String date, String userName}){
+  Future postPublication({String id,String title, String subTitle, String content='', String imageUrl='', String date, String userName}){
     
     return publicationCollection.document('$date $uid').setData(
       {
+        'id':id,
         'userName':userName,
         'title':title,
         'subTitle':subTitle,
@@ -58,17 +60,22 @@ class DatabaseService{
 
 
   List<Publication> _publicationFromSnapshot(QuerySnapshot snapshot){
-    return snapshot.documents.map((doc){
+    print('cangando de database');
+    if(this.chargin) return [];
+    this.chargin = true;
+    List<Publication> resp = snapshot.documents.map((doc){
       return Publication(
+        id: doc.data["id"]??'' ,
         userName: doc.data["userName"]??'',
         title: doc.data['title']??'',
         subTitle: doc.data['subTitle']??'',
         content: doc.data['content']??'',
         imageUrl: doc.data['imageUrl']??''
       );
-
     }
     ).toList();
+    this.chargin = false;
+    return resp;
   }
 
   Stream<List<Publication>> get publications{
