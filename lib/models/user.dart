@@ -1,6 +1,7 @@
 
 
-import 'package:proyecto_poo/models/publication.dart';
+import 'package:proyecto_poo/models/publicationAsk.dart';
+import 'package:proyecto_poo/models/publicationHelp.dart';
 import 'package:proyecto_poo/providers/database_provider.dart';
 
 class User {
@@ -14,7 +15,7 @@ class User {
 
   User({this.uid, this.name, this.email,this.phoneNumber,this.photoUrl});
 
-  bool publish(Publication publication){
+  bool publish(PublicationAsk publication){
     numberPost++;
     DatabaseService db =  new DatabaseService(uid: this.uid);
     db.updateUser(numberPost: numberPost);
@@ -26,6 +27,22 @@ class User {
     content: publication.content,
     imageUrl: publication.imageUrl,
     date: publication.date,
+    );
+    return true;
+  }
+
+  bool publishHelp(PublicationHelp publication){
+    DatabaseService db =  new DatabaseService(uid: this.uid);
+    db.updateUser(numberPost: numberPost);
+    db.postPublicationHelp(
+    id: '${this.uid}${publication.date}',
+    userName: publication.userName,
+    title: publication.title,
+    subTitle: publication.subTitle, 
+    content: publication.content,
+    imageUrl: publication.imageUrl,
+    date: publication.date,
+    contact: publication.contact,
     );
     return true;
   }

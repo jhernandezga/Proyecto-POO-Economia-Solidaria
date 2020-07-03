@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:proyecto_poo/models/user.dart';
 import 'package:proyecto_poo/pages/chat_page.dart';
@@ -21,12 +22,16 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   _ChatRoomPageState(this._name); 
 
   Stream<QuerySnapshot> _chatRoomList;
+  QuerySnapshot hola ;
+  
   String _userName= '';
 
   @override
-  void initState() {
+  void initState()  {
+
     setState(() {
       this._chatRoomList = DatabaseService().getChatRoom(this._name);
+    
     });
     super.initState();
   }
@@ -45,11 +50,17 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
   return StreamBuilder(
     stream: this._chatRoomList,
     builder: (context, snapshot) {
+     
+
       return snapshot.hasData?ListView.builder(
         itemCount: snapshot.data.documents.length,
         itemBuilder: (context, index) {
+          
           return chatRoomTile(
-            snapshot.data.documents[index].data['chatRoomId'] );
+            snapshot.data.documents[index].data['chatRoomId'],
+  
+            
+             );
         },
         ):Container();
     },
@@ -61,14 +72,16 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
       onTap: (){
         Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => ChatPage(chatRoomId)),
+        CupertinoPageRoute(builder: (context) => ChatPage(chatRoomId)),
   );
       },
         child: Container(
+        color:Colors.white ,
          
           padding: EdgeInsets.all(15),
         margin: EdgeInsets.symmetric(horizontal: 20,vertical: 2),
         child: Row(
+          mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Container(
               padding: EdgeInsets.all(20),
@@ -79,7 +92,10 @@ class _ChatRoomPageState extends State<ChatRoomPage> {
               ),
             ),
             SizedBox(width: 20,),
-            Text(chatRoomId.replaceAll('_', '').replaceAll(this._userName, ''), style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
+            
+                Text(chatRoomId.replaceAll('_', '').replaceAll(this._userName, ''), style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15)),
+                
+    
           ],
         ),
       ),

@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:proyecto_poo/models/chat.dart';
-import 'package:proyecto_poo/models/publication.dart';
+import 'package:proyecto_poo/models/publicationAsk.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_poo/models/user.dart';
 import 'package:proyecto_poo/pages/chatRoom_page.dart';
@@ -11,7 +11,7 @@ import 'package:proyecto_poo/pages/chat_page.dart';
 
 
 class CardPage extends StatefulWidget {
-  final Publication publication;
+  final PublicationAsk publication;
   CardPage( this.publication);
 
   @override
@@ -19,7 +19,7 @@ class CardPage extends StatefulWidget {
 }
 
 class _CardPageState extends State<CardPage> {
-  Publication _publication;
+  PublicationAsk _publication;
   List<String> _options = ["Donación","Trueque","Otro"];
   int _selection ;
   String _message;
@@ -213,7 +213,7 @@ Widget _description(BuildContext context){
 }
 
 Widget _image(){
-  return Container(
+  return (this._publication.imageUrl!='')?Container(
     padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
     width: MediaQuery.of(context).size.width*0.7,
     height: MediaQuery.of(context).size.height*0.4,
@@ -234,7 +234,7 @@ Widget _image(){
            ),
       ),
     ),
-  );
+  ):Container();
 }
 
  Widget _crearAppBar() {

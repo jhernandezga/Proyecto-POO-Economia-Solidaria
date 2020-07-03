@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:proyecto_poo/models/publication.dart';
+import 'package:proyecto_poo/models/publicationAsk.dart';
+import 'package:proyecto_poo/models/publicationHelp.dart';
 import 'package:proyecto_poo/models/user.dart';
 
 
@@ -13,6 +14,7 @@ class DatabaseService{
 
   final CollectionReference userCollection = Firestore.instance.collection('users');
   final CollectionReference publicationCollection = Firestore.instance.collection('publications');
+  final CollectionReference publicationCollectionHelp = Firestore.instance.collection('publicationsHelp');
 
 
 
@@ -59,12 +61,12 @@ class DatabaseService{
   }
 
 
-  List<Publication> _publicationFromSnapshot(QuerySnapshot snapshot){
+  List<PublicationAsk> _publicationAskFromSnapshot(QuerySnapshot snapshot){
     print('cangando de database');
     if(this.chargin) return [];
     this.chargin = true;
-    List<Publication> resp = snapshot.documents.map((doc){
-      return Publication(
+    List<PublicationAsk> resp = snapshot.documents.map((doc){
+      return PublicationAsk(
         id: doc.data["id"]??'' ,
         userName: doc.data["userName"]??'',
         title: doc.data['title']??'',
@@ -78,9 +80,54 @@ class DatabaseService{
     return resp;
   }
 
-  Stream<List<Publication>> get publications{
+  Stream<List<PublicationAsk>> get publicationsAsk{
     return  this.publicationCollection.orderBy('date',descending: true)
-    .snapshots().map(_publicationFromSnapshot);
+    .snapshots().map(_publicationAskFromSnapshot);
+  }
+
+
+  Future postPublicationHelp({String id,String title, String subTitle, String content='', String imageUrl='', String date, String userName, String contact}){
+    
+    return publicationCollectionHelp.document('$date $uid').setData(
+      {
+        'id':id,
+        'userName':userName,
+        'title':title,
+        'subTitle':subTitle,
+        'content':content,
+        'imageUrl':imageUrl,
+        'date': date,
+        'contact':contact,
+        'likes':0
+      }
+    );
+   
+
+  }
+
+
+  List<PublicationHelp> _publicationHelpFromSnapshot(QuerySnapshot snapshot){
+
+    List<PublicationHelp> resp = snapshot.documents.map((doc){
+      return PublicationHelp(
+        id: doc.data["id"]??'' ,
+        userName: doc.data["userName"]??'',
+        title: doc.data['title']??'',
+        subTitle: doc.data['subTitle']??'',
+        content: doc.data['content']??'',
+        imageUrl: doc.data['imageUrl']??'',
+        contact: doc.data['contact']??'',
+        likes: doc.data['likes']??''
+      );
+    }
+    ).toList();
+  
+    return resp;
+  }
+
+  Stream<List<PublicationHelp>> get publicationsHelp{
+    return  this.publicationCollectionHelp.orderBy('date',descending: true)
+    .snapshots().map(_publicationHelpFromSnapshot);
   }
 
 
@@ -90,6 +137,15 @@ class DatabaseService{
     .document(chatRoomId).setData(chatRoomMap).catchError((e){
       print(e.toString());
     });
+    
+
+  }
+  
+  proof(String chatRoomId) {
+   getConversationMessage(chatRoomId).last.then((value) => print(value.documents.length));
+    
+
+   
 
   }
 

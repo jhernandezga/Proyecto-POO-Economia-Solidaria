@@ -6,49 +6,47 @@ import 'package:proyecto_poo/models/user.dart';
 import 'package:proyecto_poo/pages/card_page.dart';
 
 
-class PublicationList extends StatefulWidget {
+class HelpList extends StatefulWidget {
 
-  PublicationList();
   
 
   @override
-  _PublicationListState createState() {
+  _HelpListState createState() {
    
-    return _PublicationListState();
+    return _HelpListState();
 
   } 
 }
 
-class _PublicationListState extends State<PublicationList> {
+class _HelpListState extends State<HelpList> {
   
   dynamic publications;
 
   @override
   Widget build(BuildContext context) {
    
-      this.publications = Provider.of<List<PublicationAsk>>(context);
+      this.publications = Provider.of<List<PublicationHelp>>(context);
      
-    return ListView.builder(
-      
-      itemCount: publications.length,
-      itemBuilder: (context,index){
-        return createCardPost(publications[index], context);
-      }
-      );
+    return Container(
+    
+      child: ListView.builder(
+        
+        
+        itemCount: publications.length,
+        itemBuilder: (context,index){
+          return createCardPost(publications[index], context);
+        }
+        ),
+    );
   }
 
 
-  Widget createCardPost(dynamic publication, BuildContext context){
+  Widget createCardPost(PublicationHelp publication, BuildContext context){
     return Padding(
       padding:EdgeInsets.only(top: 0),
       child: Card(
         child: ListTile(
-          onTap: (){
-            Navigator.push(
-               context,
-              MaterialPageRoute(builder: (context) => CardPage(publication),
-            ));
-          },
+          
           title: header(publication),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -56,6 +54,20 @@ class _PublicationListState extends State<PublicationList> {
               titleText(publication),
               buildImage(publication),
               subTitleText(publication),
+              SizedBox(height: 10,),
+              Text(publication.content,overflow: TextOverflow.fade,textAlign: TextAlign.justify,style: TextStyle(
+                color: Colors.black
+              ),),
+              Row(
+                children: <Widget>[
+                  Text('Más información en: ',),
+                  SizedBox(width: 10,),
+                  Text('${publication.contact}',style: TextStyle(color: Colors.blue,),),
+
+                ],
+                ),
+              
+              SizedBox(height: 10,),
               date(publication),
               
               
@@ -83,7 +95,9 @@ class _PublicationListState extends State<PublicationList> {
     return Row(
             children: <Widget>[
               IconButton(icon: Icon(Icons.account_circle),onPressed: (){},),
-              Text(publication.userName),
+              Text(publication.userName,overflow: TextOverflow.ellipsis,),
+              SizedBox(width:  10,),
+              Text('publicó una ayuda',style: TextStyle(fontSize: 12, color: Colors.grey),)
             ],
           );
   }
@@ -93,7 +107,6 @@ class _PublicationListState extends State<PublicationList> {
   }
   Widget buildImage( publication){
     String url = publication.imageUrl;
-    ImageProvider image;
     
     if(url == "" || url == null){
       return Container();

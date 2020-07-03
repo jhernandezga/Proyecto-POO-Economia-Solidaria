@@ -1,7 +1,8 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:proyecto_poo/models/publication.dart';
+import 'package:proyecto_poo/models/publicationAsk.dart';
+import 'package:proyecto_poo/models/publicationHelp.dart';
 import 'package:proyecto_poo/models/user.dart';
 import 'package:proyecto_poo/providers/database_provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,11 +20,17 @@ class _PublicationPageState extends State<PublicationPage> {
   String _titleField = '';
   String _subTitleField = '';
   String _contentField = '';
+   String _contactField = '';
   File _image;
   final picker = ImagePicker();
+  bool _help = false;
 
   @override
   Widget build(BuildContext context) {
+    int arg = ModalRoute.of(context).settings.arguments;
+    if(arg==0){
+      this._help = true;
+    }
     return Scaffold(
         appBar: AppBar(
           title: Text('Publicar'),
@@ -41,8 +48,11 @@ class _PublicationPageState extends State<PublicationPage> {
                     _title(),
                     _subTitle(),
                     _content(),
+                    _contact(),
+                     _switchHelp(),
                     _buttonSubmmit(context),
                     _uploadedImage(),
+                    
                   ],
                 ),
               ),
@@ -83,7 +93,7 @@ class _PublicationPageState extends State<PublicationPage> {
             TextFormField(
               maxLength: 25,
               decoration: InputDecoration(
-                  icon: Icon(Icons.accessibility_new), hintText: 'Título'),
+                  icon: Icon(Icons.toys), hintText: 'Título'),
               validator: (value) =>
                   value.isEmpty ? 'Este campo no puede estar vacío' : null,
               onSaved: (newValue) => this._titleField = newValue,
@@ -107,7 +117,7 @@ class _PublicationPageState extends State<PublicationPage> {
               maxLength: 100,
               decoration: InputDecoration(
                   icon: Icon(Icons.assignment_late),
-                  hintText: 'Lo que necesitas en pocas palabras'),
+                  hintText: this._help?'Qué ayuda ofreces en pocas palabras':'Lo que necesitas en pocas palabras'),
               onSaved: (newValue) => this._subTitleField = newValue,
             )
           ],
@@ -132,11 +142,36 @@ class _PublicationPageState extends State<PublicationPage> {
               maxLength: 400,
               decoration: InputDecoration(
                   icon: Icon(Icons.create),
-                  hintText: 'Describe brevemente lo que necesitas'),
+                  hintText: this._help?'Describe cómo ayudarás ':'Describe brevemente lo que necesitas'),
               onSaved: (newValue) => this._contentField = newValue,
             )
           ],
         ));
+  }
+  Widget _contact(){
+    return this._help? Container(
+        margin: EdgeInsets.only(left: 20, right: 20, top: 60),
+        child: Column(
+          children: <Widget>[
+            Text(
+              'Datos de contacto/ Más información',
+              textAlign: TextAlign.start,
+            ),
+            TextFormField(
+              keyboardType: TextInputType.multiline,
+              validator: (value) =>
+                  value.isEmpty ? 'Este campo no puede estar vacío' : null,
+              maxLines: 10,
+              minLines: 1,
+              maxLength: 400,
+              decoration: InputDecoration(
+                  icon: Icon(Icons.contact_mail),
+                  hintText: 'A dónde se pueden comunicar las persona que necesiten la ayuda'),
+              onSaved: (newValue) => this._contactField = newValue,
+            )
+          ],
+        )):Container();
+
   }
 
   Widget _buttonSubmmit(BuildContext context) {
@@ -154,22 +189,51 @@ class _PublicationPageState extends State<PublicationPage> {
           if (formKey.currentState.validate()) {
             formKey.currentState.save();
             if (this._image == null) {
-              user.publish(Publication(
+              if(this._help){
+                user.publishHelp(PublicationHelp(
+
+                title: this._titleField,
+                subTitle: this._subTitleField,
+                content: this._contentField,
+                contact: this._contactField
+              ));
+
+              }else{
+                user.publish(PublicationAsk(
 
                 title: this._titleField,
                 subTitle: this._subTitleField,
                 content: this._contentField,
               ));
+
+              }
+              
               Navigator.pop(context);
             } else {
               String url = await uploadStatusImage();
-              user.publish(Publication(
+              if(this._help){
+                
+              user.publishHelp(PublicationHelp(
+                  userName: user.name,
+                  title: this._titleField,
+                  subTitle: this._subTitleField,
+                  content: this._contentField,
+                  imageUrl: url,
+                  contact: this._contactField,
+                  ));
+
+              }else{
+              
+              user.publish(PublicationAsk(
                   userName: user.name,
                   title: this._titleField,
                   subTitle: this._subTitleField,
                   content: this._contentField,
                   imageUrl: url));
+
+              }
               Navigator.pop(context);
+              
             }
           }
         });
@@ -220,6 +284,24 @@ class _PublicationPageState extends State<PublicationPage> {
         postImageRef.child(timeKey.toString() + ".jpg").putFile(this._image);
     var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
     return imageUrl.toString();
+  }
+
+  
+  Widget _switchHelp(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text('Quieres ayudar a alguien?'),
+        Switch(
+          value: _help,
+          onChanged: (value){
+            setState(() {
+              this._help = value;
+            });
+          }
+          ),
+      ],
+    );
   }
 
   }
