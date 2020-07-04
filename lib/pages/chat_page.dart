@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:proyecto_poo/models/user.dart';
 import 'package:proyecto_poo/pages/case_page.dart';
@@ -9,6 +10,7 @@ import 'package:proyecto_poo/providers/database_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:proyecto_poo/widgets/dialogEdit.dart';
 import 'package:proyecto_poo/widgets/slide_transition.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 
 class ChatPage extends StatefulWidget {
@@ -168,7 +170,16 @@ class _ChatPageState extends State<ChatPage> {
             
 
             children: <Widget>[
-              Text(message, style: TextStyle(color: Colors.white),overflow: TextOverflow.ellipsis,),
+              //Flexible(child: Text(message, style: TextStyle(color: Colors.white),overflow: TextOverflow.fade,)),
+              Flexible(
+                  child: Linkify(
+                  onOpen: _onOpen,
+                  text: "$message",
+                  style: TextStyle(color: Colors.white),
+                  overflow: TextOverflow.fade,
+                  linkStyle: TextStyle(color: Colors.white),
+                ),
+              ),
               SizedBox(width:10),
               Text(date.substring(11,16), style: TextStyle(fontSize: 11,color: Colors.grey[300]),textAlign: TextAlign.right,overflow: TextOverflow.ellipsis,)
             ],
@@ -183,6 +194,15 @@ class _ChatPageState extends State<ChatPage> {
       ),
     ); 
 
+  }
+
+  
+  Future<void> _onOpen(LinkableElement link) async {
+    if (await canLaunch(link.url)) {
+      await launch(link.url);
+    } else {
+      throw 'Could not launch $link';
+    }
   }
 }
 

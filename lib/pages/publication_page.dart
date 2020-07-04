@@ -243,7 +243,7 @@ class _PublicationPageState extends State<PublicationPage> {
     try {
       var tempImage = await picker.getImage(source: source,
       preferredCameraDevice: CameraDevice.rear,
-      imageQuality: 40
+      imageQuality: (source == ImageSource.camera)?10:40
       );
       setState(() {
         _image = File(tempImage.path);

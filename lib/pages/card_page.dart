@@ -141,13 +141,15 @@ Widget interactionWidgets(User user, String userName){
                                 Chat chat = new Chat(user.name, this._publication.userName);
                                 chat.createChatRoomAndStartConversation();
                                 
-                                user.sendMessage(this._message, chat.chatRoomId);
-                                user.sendMessage('Ví tu publicación', chat.chatRoomId);
+                                
+                                String selection = '';
+                                
                                 if(this._selection!=null){
-                                   user.sendMessage('te ayudaré con ${this._options[this._selection]}', chat.chatRoomId);
+                                   selection ='te ayudaré con ${this._options[this._selection]}\n';
                                 }
-                                user.sendMessage('estos son mis datos de contacto', chat.chatRoomId);
-                                user.sendMessage('${user.email}', chat.chatRoomId);
+                                user.sendMessage(this._message, chat.chatRoomId);
+                                user.sendMessage('Ví tu publicación,\n${selection}estos son mis datos de contacto:\n\n${user.email}', chat.chatRoomId);
+                                
                                 
                                 Navigator.pushReplacement(
                                    context,

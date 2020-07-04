@@ -31,7 +31,8 @@ dependencies:
   intl:
   image_picker: ^0.6.7+2
   flutter_swiper :
-  
+  url_launcher: ^5.4.11
+  flutter_linkify: 
 
 
 
