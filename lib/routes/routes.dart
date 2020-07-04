@@ -17,6 +17,7 @@ Map<String, WidgetBuilder> getApplicationRoutes(BuildContext context)
   return <String, WidgetBuilder>{
         '/': (BuildContext context )  => Wrapper(),
         'register':(BuildContext context )  => RegisterPage(),
+        'login':(BuildContext context )  => LoginPage(),
         'product':(BuildContext context )  => PublicationPage(),
         'home':(BuildContext context )  => HomePage(),
 

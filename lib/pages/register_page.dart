@@ -116,6 +116,7 @@ class _RegisterPage extends State<RegisterPage> {
           icon: Icon(Icons.alternate_email, color: Colors.deepPurple),
           hintText: 'ejemplo@correo.com',
           labelText: 'Correo electrónico',
+          errorText: this._error
         ),
         onSaved: (newValue) => _emailField = newValue,
       ),
@@ -206,13 +207,15 @@ class _RegisterPage extends State<RegisterPage> {
       if(result == null)
       {
         setState(() {
-          _error = 'Por favor ingresa un email válido';
+          _error = 'Por favor ingresa un email válido o no registrado';
         });
 
       }
       else{
-         print(_emailField+"  "+_passwordField);
-        Navigator.pop(context);
+        
+         
+          Navigator.pop(context);
+
       }
   }
 }

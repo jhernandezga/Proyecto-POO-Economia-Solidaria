@@ -4,6 +4,8 @@ import 'package:proyecto_poo/models/publicationAsk.dart';
 import 'package:proyecto_poo/models/publicationHelp.dart';
 import 'package:proyecto_poo/providers/database_provider.dart';
 
+import 'case.dart';
+
 class User {
 
   String uid='';
@@ -21,7 +23,7 @@ class User {
     db.updateUser(numberPost: numberPost);
     db.postPublication(
     id: '${this.uid}${publication.date}',
-    userName: publication.userName,
+    userName: name,
     title: publication.title,
     subTitle: publication.subTitle, 
     content: publication.content,
@@ -36,7 +38,7 @@ class User {
     db.updateUser(numberPost: numberPost);
     db.postPublicationHelp(
     id: '${this.uid}${publication.date}',
-    userName: publication.userName,
+    userName: name,
     title: publication.title,
     subTitle: publication.subTitle, 
     content: publication.content,
@@ -55,6 +57,16 @@ class User {
       'date': date.toString()
     };
     DatabaseService().addConversationMessages(chatRoomId, messageMap);
+  }
+  void postCaseUser(Case caseID){
+    
+    DatabaseService().postCase(
+      id:  caseID.id,
+      contentCase: caseID.contentCase,
+      imageUrl:  caseID.imageUrl,
+      date: caseID.date
+    );
+
   }
 
 }

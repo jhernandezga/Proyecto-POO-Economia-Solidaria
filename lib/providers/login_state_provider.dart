@@ -103,11 +103,12 @@ class LoginState with ChangeNotifier{
       FirebaseUser user = result.user;
       UserUpdateInfo info = new  UserUpdateInfo();
       info.displayName = userName;
-      user.updateProfile(info);
+      await user.updateProfile(info);
       if(user!=null)
       {
         await DatabaseService(uid: user.uid).createUser(email: email,name: userName );
       }
+      await logout();
       
       return _userFromFirebaseUser(user);
       

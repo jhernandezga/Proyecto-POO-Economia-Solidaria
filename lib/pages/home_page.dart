@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:proyecto_poo/models/case.dart';
 import 'package:proyecto_poo/models/publicationAsk.dart';
 import 'package:proyecto_poo/models/publicationHelp.dart';
 import 'package:proyecto_poo/models/user.dart';
@@ -49,6 +50,10 @@ class _HomePageState extends State<HomePage> {
           ),
         StreamProvider<List<PublicationAsk>>(
           create: (context) => DatabaseService().publicationsAsk,
+          initialData: [],
+          ),
+        StreamProvider<List<Case>>(
+          create: (context) => DatabaseService().cases,
           initialData: [],
           ),
         

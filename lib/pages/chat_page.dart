@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:proyecto_poo/models/user.dart';
+import 'package:proyecto_poo/pages/case_page.dart';
 import 'package:proyecto_poo/providers/database_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:proyecto_poo/widgets/dialogEdit.dart';
+import 'package:proyecto_poo/widgets/slide_transition.dart';
+
 
 class ChatPage extends StatefulWidget {
   final String _chatRoomId;
@@ -17,7 +24,12 @@ class _ChatPageState extends State<ChatPage> {
   Stream chatMessagesStream;
   User user;
   TextEditingController controller = new TextEditingController();
+  
   ScrollController controllerScroll = ScrollController();
+
+ 
+
+
   @override
   void initState() { 
       setState(() {
@@ -36,13 +48,27 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     user = Provider.of<User>(context);
     return Scaffold(
-      appBar: AppBar(
+      appBar:  AppBar(
+        elevation: 0,
         title: Text('${this._chatRoomId.replaceAll('_', '').replaceAll(user.name, '')}'),
         leading: Icon(Icons.account_circle,color: Colors.white,size: 40,),
+        actions: <Widget>[
+          IconButton(icon:Text('Caso')
+          , onPressed: (){
+            
+           
+            Navigator.push(context, SlideRightRoute(widget: CasePage(this._chatRoomId))  );
+          }
+          )
+        ],
+
       ),
       body:Container(
+        
+     
         child: Column(
           children: <Widget>[
+            
             chatMessageList(),
             Container(
               padding: EdgeInsets.symmetric(horizontal:20 ,vertical: 30),
@@ -86,6 +112,8 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
+
+ 
   void onSummited(BuildContext context){
     if(this.controller.text.isNotEmpty){
       user.sendMessage(this.controller.text, this._chatRoomId);
@@ -157,3 +185,4 @@ class _ChatPageState extends State<ChatPage> {
 
   }
 }
+

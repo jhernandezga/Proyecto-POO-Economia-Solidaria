@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:proyecto_poo/models/case.dart';
 import 'package:proyecto_poo/models/publicationAsk.dart';
 import 'package:proyecto_poo/models/publicationHelp.dart';
 import 'package:proyecto_poo/models/user.dart';
@@ -62,7 +63,7 @@ class DatabaseService{
 
 
   List<PublicationAsk> _publicationAskFromSnapshot(QuerySnapshot snapshot){
-    print('cangando de database');
+    
     if(this.chargin) return [];
     this.chargin = true;
     List<PublicationAsk> resp = snapshot.documents.map((doc){
@@ -84,6 +85,7 @@ class DatabaseService{
     return  this.publicationCollection.orderBy('date',descending: true)
     .snapshots().map(_publicationAskFromSnapshot);
   }
+  
 
 
   Future postPublicationHelp({String id,String title, String subTitle, String content='', String imageUrl='', String date, String userName, String contact}){
@@ -102,7 +104,33 @@ class DatabaseService{
       }
     );
    
+  }
 
+  Future postCase({String id,String contentCase, String imageUrl, String date}){
+    return Firestore.instance.collection('cases').document('$date $uid').setData(
+      {
+        'id':id,
+        'contentCase':contentCase,
+        'imageUrl':imageUrl,
+        'date':date
+      }
+    );
+  }
+
+  List<Case> _casesFromSnapshot(QuerySnapshot snapshot){
+    List<Case> resp = snapshot.documents.map((doc){
+      return Case(
+        id: doc.data['id']??'',
+        contentCase: doc.data['contentCase']??'',
+        imageUrl: doc.data['imageUrl']??'',
+      );
+    }).toList();
+    return resp;
+  }
+
+  Stream<List<Case>> get cases{
+    return Firestore.instance.collection('cases').orderBy('date',descending: true)
+    .snapshots().map((_casesFromSnapshot));
   }
 
 

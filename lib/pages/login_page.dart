@@ -98,6 +98,17 @@ class _LoginPageState extends State<LoginPage> {
           icon: Icon(Icons.alternate_email, color: Colors.blueAccent),
           hintText: 'ejemplo@correo.com',
           labelText: 'Correo electrónico',
+          errorText:(this._error == '')?null:this._error,
+          focusedErrorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.blue
+            ),),
+          errorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.blue
+            )
+          )
+          
         ),
         onSaved: (newValue) => _emailField = newValue,
       ),

@@ -28,7 +28,7 @@ class _PublicationPageState extends State<PublicationPage> {
   @override
   Widget build(BuildContext context) {
     int arg = ModalRoute.of(context).settings.arguments;
-    if(arg==0){
+    if(arg==1){
       this._help = true;
     }
     return Scaffold(
